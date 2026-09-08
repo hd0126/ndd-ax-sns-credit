@@ -1,0 +1,29 @@
+name: 실원 의견 (AX SNS 크레딧)
+description: 나노디스플레이 실회의용 SNS 크레딧 의견
+title: "[의견] "
+labels: ["opinion"]
+body:
+  - type: dropdown
+    id: role
+    attributes:
+      label: 관점
+      options: [연구자, 학생, 행정/지원, 기타]
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: 해당 항목
+      options:
+        - label: 위키 가산이 합리적
+        - label: 좋아요 누름 점수는 줄이는 게 맞다
+        - label: 교육(S)은 별도 순위로
+        - label: 우리 실 Pilot 참여 의향 있음
+        - label: 아직 설명이 더 필요
+  - type: textarea
+    id: body
+    attributes:
+      label: 자유 의견
+      description: 연구실 기준으로 걱정되는 점, 필요한 규칙
+    validations:
+      required: true

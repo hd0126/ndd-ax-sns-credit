@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>실회의 · AX SNS 크레딧 의견수렴</title>
+<style>
+:root{--bg:#f3f5f8;--card:#fff;--ink:#1a1d21;--muted:#5f6b7a;--line:#e2e8f0;--blue:#0b5fff;--blue2:#e8f0ff;--k:#2563eb;--s:#7c3aed;--ok:#15803d;--warn:#b45309;--bad:#b91c1c}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Apple SD Gothic Neo","Noto Sans KR",sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;font-size:15px}
+.top{position:sticky;top:0;z-index:40;background:#0b3d91;color:#fff;padding:12px 18px}
+.top h1{margin:0;font-size:18px;font-weight:750}
+.top p{margin:4px 0 0;font-size:12px;opacity:.9}
+.nav{display:flex;gap:6px;flex-wrap:wrap;padding:10px 16px;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:58px;z-index:39}
+.nav button{border:1px solid var(--line);background:#f8fafc;border-radius:999px;padding:8px 14px;font-size:13px;cursor:pointer}
+.nav button.active{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:700}
+.wrap{max-width:1180px;margin:0 auto;padding:16px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:14px}
+.panel h2{margin:0 0 10px;font-size:18px}
+.panel h3{margin:16px 0 8px;font-size:15px}
+.muted{color:var(--muted);font-size:13px}
+.grid2{display:grid;grid-template-columns:1.2fr .8fr;gap:14px}
+@media(max-width:900px){.grid2{grid-template-columns:1fr}}
+ul.clean{margin:8px 0;padding-left:1.2em}
+ul.clean li{margin:6px 0}
+.timeline{border-left:3px solid #c7d7fe;margin:10px 0 0 6px;padding-left:16px}
+.timeline .item{margin:0 0 14px;position:relative}
+.timeline .item:before{content:"";position:absolute;left:-21px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--blue)}
+.timeline .when{font-size:12px;color:var(--blue);font-weight:700}
+.tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:999px;background:var(--blue2);color:#1e3a8a;margin-right:4px}
+.tag.warn{background:#ffedd5;color:#9a3412}
+.tag.ok{background:#dcfce7;color:#166534}
+.tag.bad{background:#fee2e2;color:#991b1b}
+.qbox{border:1px solid #bfdbfe;background:#f8fbff;border-radius:12px;padding:12px;margin:8px 0}
+.qbox strong{display:block;margin-bottom:4px}
+table.simple{width:100%;border-collapse:collapse;font-size:13px}
+table.simple th,table.simple td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left;vertical-align:top}
+table.simple th{color:var(--muted);font-weight:600}
+button,select,input,textarea{font:inherit;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:#fff}
+button{cursor:pointer}
+button.primary{background:var(--blue);color:#fff;border-color:var(--blue)}
+button.ghost{background:#f8fafc}
+.hidden{display:none !important}
+.layout-sns{display:grid;grid-template-columns:1fr 340px;gap:14px}
+@media(max-width:980px){.layout-sns{grid-template-columns:1fr}}
+.composer textarea{width:100%;min-height:70px;margin:6px 0}
+.feed{display:flex;flex-direction:column;gap:10px}
+.post{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff}
+.post.mine{box-shadow:0 0 0 2px rgba(11,95,255,.15)}
+.meta{display:flex;gap:10px;align-items:center;margin-bottom:6px}
+.avatar{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700}
+.who{font-weight:700;font-size:14px}
+.when{font-size:12px;color:var(--muted)}
+.body{white-space:pre-wrap;margin:8px 0;word-break:break-word}
+.actions{display:flex;gap:6px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:8px}
+.actions button{font-size:12px;padding:6px 8px}
+.actions button.on{background:var(--blue2);border-color:var(--blue);color:var(--blue)}
+.chip{display:inline-block;font-size:11px;border-radius:6px;padding:2px 7px;margin-right:4px;background:#eef2ff;color:#3730a3}
+.chip.first{background:#fef3c7;color:#92400e}
+.chip.wiki{background:#dcfce7;color:#166534}
+.cmt{display:flex;gap:8px;font-size:13px;padding:5px 0}
+.cmt .av{width:26px;height:26px;border-radius:50%;flex:none;display:grid;place-items:center;color:#fff;font-size:11px;font-weight:700}
+.cmt-form{display:flex;gap:6px;margin-top:6px}
+.cmt-form input{flex:1}
+.bar{height:10px;border-radius:999px;background:#e5e7eb;overflow:hidden;display:flex;margin:6px 0 10px}
+.bar .k{background:var(--k);height:100%}
+.bar .s{background:var(--s);height:100%}
+.rowline{display:flex;justify-content:space-between;font-size:12px;margin:3px 0}
+.pts{font-weight:700;font-variant-numeric:tabular-nums}
+.issue{border-left:3px solid #f59e0b;background:#fffbeb;padding:8px 10px;border-radius:0 8px 8px 0;font-size:12px;margin:8px 0}
+.issue.bad{border-color:var(--bad);background:#fef2f2}
+.issue.ok{border-color:var(--ok);background:#f0fdf4}
+.rate-grid{display:grid;grid-template-columns:1fr 70px;gap:6px;align-items:center;font-size:12px}
+.rank{list-style:none;margin:0;padding:0}
+.rank li{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line);font-size:13px}
+.rank .me{font-weight:800;color:var(--blue)}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.tabs button.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#111827;color:#fff;padding:10px 14px;border-radius:10px;font-size:13px;opacity:0;transition:.2s;z-index:60}
+.toast.show{opacity:1}
+.op-list{max-height:260px;overflow:auto;border:1px solid var(--line);border-radius:10px;padding:8px}
+.op-item{border-bottom:1px solid var(--line);padding:8px 4px;font-size:13px}
+.op-item:last-child{border-bottom:0}
+label.chk{display:block;margin:4px 0;font-size:13px}
+footer{max-width:1180px;margin:8px auto 28px;padding:0 16px;font-size:11px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>나노디스플레이연구실 실회의 · AX SNS 크레딧 의견수렴</h1>
+  <p>2026-09-08 · 테스트·가상 데이터 · GitHub Pages · 의견=Issue · 라이브 정산 아님</p>
+</div>
+<nav class="nav" id="nav">
+  <button type="button" data-tab="today" class="active">1. 오늘 회의</button>
+  <button type="button" data-tab="history">2. 경과</button>
+  <button type="button" data-tab="sns">3. SNS 시연</button>
+  <button type="button" data-tab="eval">4. 평가·배점</button>
+  <button type="button" data-tab="opinion">5. 의견 적기</button>
+</nav>
+
+<div class="wrap">
+  <!-- TODAY -->
+  <section id="tab-today" class="tab">
+    <div class="panel">
+      <h2>오늘 이 자리에서 할 일</h2>
+      <p>AX가속화연구단(내재화팀 겸직)에서 준비 중인 <strong>KIMM-SNS 크레딧(점수) 설계</strong>를 실원께 설명하고, <strong>연구실 관점 의견</strong>을 모읍니다.</p>
+      <div class="grid2" style="margin-top:12px">
+        <div>
+          <h3>진행 순서 (약 15–20분)</h3>
+          <ol>
+            <li>경과 한 바퀴 (탭 2)</li>
+            <li>가상 SNS에서 글·좋아요·점수가 어떻게 붙는지 시연 (탭 3)</li>
+            <li>배점을 바꿔 순위가 어떻게 흔들리는지 (탭 4)</li>
+            <li>의견 적기 / 구두 의견 (탭 5)</li>
+          </ol>
+        </div>
+        <div>
+          <h3>먼저 같이 맞춰 둘 말</h3>
+          <p><span class="tag warn">초안</span> 확정 제도 아님 · <span class="tag warn">가상</span> 시뮬용 데이터 · <span class="tag">크레딧</span> ≠ 자동 승급</p>
+          <ul class="clean">
+            <li>내부평가는 <strong>단장이 직접 부여</strong>하는 방향(크레딧은 참고·후보).</li>
+            <li>실제 평가 연계 문구는 <strong>2027</strong> 쪽. 올해는 Pilot·규칙 검증.</li>
+            <li>DesignMD는 문서 양식+AI 초안 보조이지, 결재·공문 자동이 아님.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <h2>실원께 꼭 듣고 싶은 것</h2>
+      <div class="qbox"><strong>Q1. 연구실에서 “쓸 만한” SNS 활동은?</strong>실험노트·실패모드·장비팁·위키화… 어떤 글이 점수 받을 가치가 있나?</div>
+      <div class="qbox"><strong>Q2. 좋아요·댓글에 점수를 주면?</strong>정보 공유를 늘릴까, 클릭만 늘릴까? (현재안은 ‘누름’에도 점수)</div>
+      <div class="qbox"><strong>Q3. 위키(검토 후 published) 가산이 적절한가?</strong>품질 게이트로 볼 수 있나, 부담만 늘까?</div>
+      <div class="qbox"><strong>Q4. 교육·타부서 지원(S크레딧)을 같은 순위에 섞어도 되나?</strong>따로 보는 게 낫나?</div>
+      <div class="qbox"><strong>Q5. 우리 실이 Pilot에 참여한다면 최소 규칙?</strong>예: 주 1 메모, 실패사례 공유 등</div>
+      <p class="muted">의견은 탭 5에 적어 두거나, 회의 중 구두로 주시면 제가 취합합니다.</p>
+    </div>
+  </section>
+
+  <!-- HISTORY -->
+  <section id="tab-history" class="tab hidden">
+    <div class="panel">
+      <h2>그동안의 경과</h2>
+      <p class="muted">근거: 길형배 팀장 메일·회의 첨부 / 볼트 <code>2026_AX가속화연구단</code> 정리. 확정되지 않은 것은 초안으로 표시.</p>
+      <div class="timeline">
+        <div class="item"><div class="when">2026.7.1</div><div><strong>AX가속화연구단 출범</strong> · 단장 백동천 · 내재화팀장 길형배 · 김현돈 내재화팀 겸직</div></div>
+        <div class="item"><div class="when">2026.7.10 Kick-off</div><div>세 팀: <strong>AX혁신</strong>(현장·교육·크레딧 운영) / <strong>지식플랫폼</strong>(SNS·위키·로그) / <strong>AX내재화</strong>(문서체계·성과연결·보상 출구). 하반기=Pilot+표준, 평가 연계는 2027 방향.</div></div>
+        <div class="item"><div class="when">2026.7.21 내재화 1차</div><div>성과보상 연계 설계·크레딧 참고자료 <span class="tag warn">내부 초안</span>. 활동량만 세면 양치기 위험 → 위키 전환을 품질 기준으로 제안.</div></div>
+        <div class="item"><div class="when">2026.8.11 내재화 2차 (메일 첨부)</div><div>운영안 v1.1 + <strong>시뮬 v1</strong> + DesignMD. 시뮬=가상 인물(U001~) 엑셀, 노란 셀(배점) 바꾸면 재계산. <span class="tag warn">라이브 정산 아님</span></div></div>
+        <div class="item"><div class="when">2026.8.27 원장간담회 자료</div><div>시뮬 <strong>v1.1</strong>·운영안 v1.2. v1→v1.1에서 좋아요 ‘누름’ 1→2점 등 조정. 오늘 시연 기본은 v1.1.</div></div>
+        <div class="item"><div class="when">2026.9.8 (오늘)</div><div>실원 의견 수렴. 배점 타당성 검토초안·가상 SNS 시연으로 “느낌이 오는지” 확인.</div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h2>한 장으로 보는 구조</h2>
+      <table class="simple">
+        <tr><th>구분</th><th>내용</th></tr>
+        <tr><td>K-Credit</td><td>글·첫글·댓글·좋아요(받음/누름)·위키·인용 — 지식 콘텐츠</td></tr>
+        <tr><td>S-Credit</td><td>교육·코칭, 타 부서 도입 지원 — 전파·확산</td></tr>
+        <tr><td>안전장치(설계)</td><td>월 상한 500 / 동일인 좋아요 1일 3 (시뮬 정산식엔 아직 미연동)</td></tr>
+        <tr><td>출구</td><td>크레딧 → 단장 추천·포상 <strong>참고</strong> (1위 자동 승급 안 함)</td></tr>
+        <tr><td>구현 주체</td><td>로그·화면=지식플랫폼 / 현장 운영=혁신 / 제도·성과연결=내재화</td></tr>
+      </table>
+    </div>
+    <div class="panel">
+      <h2>검토에서 보인 쟁점 (짧게)</h2>
+      <ul class="clean">
+        <li><span class="tag bad">쟁점</span> 첫글 보너스 50 — 초기에 총점 비중 큼</li>
+        <li><span class="tag bad">쟁점</span> 좋아요 누름 점수 — 클릭만으로 점수 상승 가능</li>
+        <li><span class="tag bad">쟁점</span> 다작 vs 우수(위키) 격차가 작음 · 교육(S)이 종합 1위 가능</li>
+        <li><span class="tag ok">유지</span> K/S 이원, 위키=품질 게이트 방향, 자동승급 거부</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- SNS -->
+  <section id="tab-sns" class="tab hidden">
+    <div class="panel" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+      <strong>가상 로그인</strong>
+      <select id="me"></select>
+      <button type="button" class="ghost" id="btn-seed">대표 시나리오</button>
+      <button type="button" class="ghost" id="btn-reset">비우기</button>
+      <span class="muted">계정을 바꿔 가며 좋아요·댓글을 눌러 보세요.</span>
+    </div>
+    <div class="layout-sns">
+      <div>
+        <div class="panel composer">
+          <h2>새 글</h2>
+          <textarea id="new-body" placeholder="연구 메모, 실패 사례, 장비 팁…"></textarea>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+            <label class="chip"><input type="checkbox" id="new-wiki" /> 위키 published</label>
+            <button type="button" class="primary" id="btn-post">게시</button>
+            <button type="button" class="ghost" id="btn-edu">교육 +1 (S)</button>
+            <button type="button" class="ghost" id="btn-support">타부서 지원 +1 (S)</button>
+          </div>
+        </div>
+        <div class="feed" id="feed"></div>
+      </div>
+      <div>
+        <div class="panel" id="score-panel">
+          <h2>내 크레딧 (실시간)</h2>
+          <div id="score-head"></div>
+          <div class="bar" id="ks-bar"></div>
+          <div id="score-rows"></div>
+          <div class="rowline" style="margin-top:8px;border-top:1px solid var(--line);padding-top:8px"><span>최종 (월상한 적용)</span><span class="pts" id="total-pts">0</span></div>
+          <div id="issues"></div>
+        </div>
+        <div class="panel"><h2>순위</h2><ol class="rank" id="rank"></ol></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EVAL -->
+  <section id="tab-eval" class="tab hidden">
+    <div class="grid2">
+      <div class="panel">
+        <h2>배점표 바꾸며 보기</h2>
+        <div class="tabs" id="presets">
+          <button type="button" data-preset="v11" class="active">v1.1 (기본)</button>
+          <button type="button" data-preset="v1">메일 v1</button>
+          <button type="button" data-preset="adj">조정안</button>
+          <button type="button" data-preset="custom">직접</button>
+        </div>
+        <div class="rate-grid" id="rate-grid"></div>
+        <p class="muted" style="margin-top:8px">숫자를 바꾸면 SNS 탭 점수·순위가 같이 바뀝니다.</p>
+        <h3>산식</h3>
+        <p style="font-size:13px"><code>K = 글×p + 첫글×f + 댓글×c + ♥받음×r + ♥누름×g + 위키×w + 인용×i</code><br/>
+        <code>S = 교육×e + 타부서×s</code><br/>
+        <code>최종 = min(K+S, 월상한)</code></p>
+      </div>
+      <div class="panel">
+        <h2>지금 순위로 보는 메시지</h2>
+        <ol class="rank" id="rank2"></ol>
+        <div id="eval-notes"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OPINION -->
+  <section id="tab-opinion" class="tab hidden">
+    <div class="grid2">
+      <div class="panel">
+        <h2>의견 남기기 (GitHub Issue)</h2>
+        <p class="muted">제출하면 GitHub 이슈 작성 화면이 열립니다. 실원 계정으로 로그인되어 있어야 하고, 이 저장소에 권한이 있어야 합니다.</p>
+        <p><label>이름(선택)<br/><input id="op-name" style="width:100%" placeholder="실명 또는 이니셜" /></label></p>
+        <p><label>관점<br/>
+          <select id="op-role" style="width:100%">
+            <option>연구자</option><option>학생</option><option>행정/지원</option><option>기타</option>
+          </select></label></p>
+        <div>
+          <span class="muted">체크 (해당만)</span>
+          <label class="chk"><input type="checkbox" value="위키 가산 찬성" /> 위키 가산이 합리적</label>
+          <label class="chk"><input type="checkbox" value="좋아요누름 축소" /> 좋아요 누름 점수는 줄이는 게 맞다</label>
+          <label class="chk"><input type="checkbox" value="S별도트랙" /> 교육(S)은 별도 순위로</label>
+          <label class="chk"><input type="checkbox" value="Pilot참여의향" /> 우리 실 Pilot 참여 의향 있음</label>
+          <label class="chk"><input type="checkbox" value="설명부족" /> 아직 설명이 더 필요</label>
+        </div>
+        <p><label>자유 의견<br/><textarea id="op-text" style="width:100%;min-height:100px" placeholder="연구실 기준으로 걱정되는 점, 필요한 규칙…"></textarea></label></p>
+        <button type="button" class="primary" id="btn-op-save">GitHub 이슈로 제출</button>
+        <p class="muted" style="margin-top:8px">제출 후 이슈 본문을 확인·수정한 뒤 Create issue를 누르세요.</p>
+      </div>
+      <div class="panel">
+        <h2>모인 의견 확인</h2>
+        <p>모든 제출은 아래 이슈 목록에 모입니다. 발표자(현돈)가 라벨·마일스톤으로 정리하면 됩니다.</p>
+        <p><a class="primary" id="op-issues-link" href="https://github.com/hd0126/ndd-ax-sns-credit/issues?q=is%3Aissue+label%3Aopinion" target="_blank" rel="noopener" style="display:inline-block;text-decoration:none;padding:10px 14px;border-radius:8px">이슈 목록 열기</a></p>
+        <ul class="clean">
+          <li>라벨 <code>opinion</code> 이슈 = 실원 의견</li>
+          <li>회의 후 이슈를 읽어 요약 노트로 옮기면 됩니다</li>
+        </ul>
+        <div class="op-list" id="op-list" style="display:none"></div>
+      </div>
+    </div>
+  </section>
+</div>
+<footer>나노디스플레이연구실 내부 의견수렴용 · 가상 SNS/배점 시연 · 작성 2026-09-08</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+const PRESETS={
+  v11:{post:10,first:50,comment:3,likeRecv:1,likeGive:2,wiki:30,cite:10,edu:30,support:50,cap:500},
+  v1:{post:10,first:50,comment:3,likeRecv:1,likeGive:1,wiki:30,cite:10,edu:30,support:50,cap:500},
+  adj:{post:6,first:25,comment:3,likeRecv:1,likeGive:1,wiki:45,cite:10,edu:30,support:50,cap:500}
+};
+const RATE_LABELS=[["post","글 작성"],["first","첫글 보너스"],["comment","댓글"],["likeRecv","좋아요 받음"],["likeGive","좋아요 누름"],["wiki","위키"],["cite","인용"],["edu","교육(S)"],["support","타부서(S)"],["cap","월 상한"]];
+const USERS=[
+  {id:"U001",name:"김우수",role:"우수 생산자",color:"#2563eb",key:"A"},
+  {id:"U002",name:"박다작",role:"다작형",color:"#059669",key:"B"},
+  {id:"U003",name:"이신규",role:"신규",color:"#d97706",key:"C"},
+  {id:"U004",name:"최교육",role:"교육 중심",color:"#7c3aed",key:"D"},
+  {id:"U005",name:"정열람",role:"열람 전용",color:"#dc2626",key:"E"}
+];
+let rates={...PRESETS.v11}, preset="v11", me="U001", posts=[], extras={}, seq=1;
+const OP_KEY="ax-sns-opinions-20260908";
+
+function user(id){return USERS.find(u=>u.id===id)}
+function ensureExtra(id){if(!extras[id])extras[id]={edu:0,support:0,cite:0};return extras[id]}
+function toast(m){const t=document.getElementById("toast");t.textContent=m;t.classList.add("show");clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove("show"),1600)}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
+
+function seed(){
+  posts=[]; extras={}; seq=1;
+  const add=(owner,body,opts={})=>posts.push({id:"P"+(seq++),owner,body,wiki:!!opts.wiki,createdAt:Date.now()-(posts.length+1)*6e4,likes:new Set(opts.likers||[]),comments:(opts.comments||[]).map((c,i)=>({id:"C"+seq+i,owner:c.owner,text:c.text}))});
+  add("U001","CVD 전사 실패 모드 체크리스트 (가상)",{wiki:true,likers:["U002","U003","U004","U005"],comments:[{owner:"U003",text:"위키로 정리하니 좋습니다"},{owner:"U004",text:"교육에 쓰겠습니다"}]});
+  add("U001","EIS 박리 완료 판정 메모",{wiki:true,likers:["U002","U003","U005"]});
+  add("U001","주간 실험 노트",{likers:["U002","U005"]});
+  for(let i=1;i<=8;i++) add("U002",`오늘의 팁 #${i}`,{wiki:i===8,likers:["U005","U001"]});
+  add("U003","첫 장비 매뉴얼 초안",{wiki:true,likers:["U001","U002","U004","U005"]});
+  add("U004","코칭 템플릿 공유",{wiki:true,likers:["U001","U005"],comments:[{owner:"U005",text:"참고하겠습니다"}]});
+  posts.forEach((p,i)=>{if(i%2===0)p.likes.add("U005"); if(i<10)p.likes.add("U004");});
+  posts[0].comments.push({id:"Cx",owner:"U005",text:"열람 후 댓글"});
+  posts[1].comments.push({id:"Cy",owner:"U005",text:"추가 댓글"});
+  ensureExtra("U004").edu=3; ensureExtra("U004").support=1;
+  ensureExtra("U001").cite=3; ensureExtra("U002").cite=1; ensureExtra("U004").cite=1;
+  toast("대표 시나리오 로드"); renderAll();
+}
+
+function activity(uid){
+  const mine=posts.filter(p=>p.owner===uid);
+  let likeGive=0, comment=0;
+  posts.forEach(p=>{if(p.likes.has(uid))likeGive++; p.comments.forEach(c=>{if(c.owner===uid)comment++})});
+  const ex=ensureExtra(uid);
+  return {post:mine.length, first:mine.length?1:0, comment, likeRecv:mine.reduce((s,p)=>s+p.likes.size,0), likeGive, wiki:mine.filter(p=>p.wiki).length, cite:ex.cite, edu:ex.edu, support:ex.support};
+}
+function calc(uid){
+  const a=activity(uid);
+  const parts={post:a.post*rates.post,first:a.first*rates.first,comment:a.comment*rates.comment,likeRecv:a.likeRecv*rates.likeRecv,likeGive:a.likeGive*rates.likeGive,wiki:a.wiki*rates.wiki,cite:a.cite*rates.cite,edu:a.edu*rates.edu,support:a.support*rates.support};
+  const K=parts.post+parts.first+parts.comment+parts.likeRecv+parts.likeGive+parts.wiki+parts.cite, S=parts.edu+parts.support, raw=K+S;
+  return {a,parts,K,S,raw,final:Math.min(raw,rates.cap)};
+}
+
+function showTab(id){
+  document.querySelectorAll(".tab").forEach(t=>t.classList.add("hidden"));
+  document.getElementById("tab-"+id).classList.remove("hidden");
+  document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.tab===id));
+  if(id==="sns"||id==="eval") renderAll();
+  if(id==="opinion") renderOpinions();
+}
+
+function renderMe(){
+  const sel=document.getElementById("me");
+  sel.innerHTML=USERS.map(u=>`<option value="${u.id}">${u.name} (${u.role})</option>`).join("");
+  sel.value=me;
+}
+function renderRates(){
+  const g=document.getElementById("rate-grid");
+  g.innerHTML=RATE_LABELS.map(([k,lab])=>`<label>${lab}</label><input type="number" min="0" step="1" data-rate="${k}" value="${rates[k]}">`).join("");
+  g.querySelectorAll("input").forEach(inp=>inp.onchange=()=>{rates[inp.dataset.rate]=Number(inp.value)||0;preset="custom";document.querySelectorAll("#presets button").forEach(b=>b.classList.toggle("active",b.dataset.preset==="custom"));renderAll();});
+}
+function renderFeed(){
+  const feed=document.getElementById("feed");
+  const sorted=[...posts].sort((a,b)=>b.createdAt-a.createdAt);
+  if(!sorted.length){feed.innerHTML='<div class="panel muted">글이 없습니다. 게시하거나 대표 시나리오를 누르세요.</div>';return;}
+  feed.innerHTML=sorted.map(p=>{
+    const u=user(p.owner), liked=p.likes.has(me);
+    const first=posts.filter(x=>x.owner===p.owner).sort((a,b)=>a.createdAt-b.createdAt)[0]?.id===p.id;
+    const chips=(first?'<span class="chip first">첫글</span>':'')+(p.wiki?'<span class="chip wiki">위키</span>':'');
+    const cmts=p.comments.map(c=>{const cu=user(c.owner);return `<div class="cmt"><div class="av" style="background:${cu.color}">${cu.key}</div><div><strong>${cu.name}</strong> ${esc(c.text)}</div></div>`}).join("");
+    return `<article class="post ${p.owner===me?"mine":""}" data-id="${p.id}">
+      <div class="meta"><div class="avatar" style="background:${u.color}">${u.key}</div><div><div class="who">${u.name} · ${u.role}</div><div class="when">${new Date(p.createdAt).toLocaleString("ko-KR")}</div></div></div>
+      <div>${chips}</div><div class="body">${esc(p.body)}</div>
+      <div class="muted" style="font-size:12px;margin-bottom:6px">좋아요 ${p.likes.size} · 댓글 ${p.comments.length}</div>
+      <div class="actions">
+        <button type="button" class="${liked?"on":""}" data-act="like">👍 좋아요</button>
+        <button type="button" data-act="cmtfocus">💬 댓글</button>
+        ${p.owner===me?`<button type="button" data-act="wiki">${p.wiki?"위키 해제":"위키 승격"}</button><button type="button" data-act="del">삭제</button>`:""}
+      </div>
+      <div>${cmts}<div class="cmt-form"><input data-cmt placeholder="댓글 입력"/><button type="button" data-act="cmt">등록</button></div></div>
+    </article>`;
+  }).join("");
+  feed.querySelectorAll(".post").forEach(node=>{
+    const p=posts.find(x=>x.id===node.dataset.id);
+    node.querySelector('[data-act="like"]').onclick=()=>{if(p.owner===me){toast("자기 글 좋아요는 제외");return;} if(p.likes.has(me))p.likes.delete(me);else p.likes.add(me);renderAll();};
+    const inp=node.querySelector("[data-cmt]");
+    const send=()=>{const t=inp.value.trim();if(!t)return;p.comments.push({id:"C"+(seq++),owner:me,text:t});inp.value="";toast("댓글 등록");renderAll();};
+    node.querySelector('[data-act="cmt"]').onclick=send;
+    inp.addEventListener("keydown",e=>{if(e.key==="Enter")send()});
+    node.querySelector('[data-act="cmtfocus"]').onclick=()=>inp.focus();
+    const w=node.querySelector('[data-act="wiki"]'); if(w) w.onclick=()=>{p.wiki=!p.wiki;renderAll();};
+    const d=node.querySelector('[data-act="del"]'); if(d) d.onclick=()=>{posts=posts.filter(x=>x.id!==p.id);renderAll();};
+  });
+}
+function renderScore(){
+  const c=calc(me), u=user(me);
+  document.getElementById("score-head").innerHTML=`<div style="font-weight:800;font-size:18px">${u.name}</div><div class="muted">${u.role}</div>`;
+  const kPct=c.raw?100*c.K/c.raw:0,sPct=c.raw?100*c.S/c.raw:0;
+  document.getElementById("ks-bar").innerHTML=`<span class="k" style="width:${kPct}%"></span><span class="s" style="width:${sPct}%"></span>`;
+  const rows=[["글",c.a.post,rates.post,c.parts.post,"k"],["첫글",c.a.first,rates.first,c.parts.first,"k"],["댓글",c.a.comment,rates.comment,c.parts.comment,"k"],["♥받음",c.a.likeRecv,rates.likeRecv,c.parts.likeRecv,"k"],["♥누름",c.a.likeGive,rates.likeGive,c.parts.likeGive,"k"],["위키",c.a.wiki,rates.wiki,c.parts.wiki,"k"],["인용",c.a.cite,rates.cite,c.parts.cite,"k"],["교육",c.a.edu,rates.edu,c.parts.edu,"s"],["타부서",c.a.support,rates.support,c.parts.support,"s"]];
+  document.getElementById("score-rows").innerHTML=rows.map(([l,n,u,p,ks])=>`<div class="rowline"><span>${l} (${n}×${u})</span><span class="pts" style="color:${ks==="s"?"var(--s)":"var(--k)"}">${p}</span></div>`).join("")+`<div class="rowline"><span>K</span><span class="pts" style="color:var(--k)">${c.K}</span></div><div class="rowline"><span>S</span><span class="pts" style="color:var(--s)">${c.S}</span></div>`;
+  document.getElementById("total-pts").textContent=c.final+"점";
+  const issues=[];
+  if(c.parts.first&&c.raw&&c.parts.first/c.raw>=0.25) issues.push(["bad",`첫글 보너스 ≈ ${(100*c.parts.first/c.raw).toFixed(0)}%`]);
+  if(c.K&&c.parts.likeGive/c.K>=0.2) issues.push(["bad",`♥누름이 K의 ${(100*c.parts.likeGive/c.K).toFixed(0)}%`]);
+  if(c.a.post===0&&c.final>0) issues.push(["bad","글 없이 점수 발생"]);
+  document.getElementById("issues").innerHTML=issues.map(([t,m])=>`<div class="issue ${t}">${m}</div>`).join("");
+}
+function renderRank(){
+  const ranked=USERS.map(u=>({u,c:calc(u.id)})).sort((a,b)=>b.c.final-a.c.final);
+  const html=ranked.map((x,i)=>`<li class="${x.u.id===me?"me":""}"><span>${i+1}. ${x.u.name}</span><span>${x.c.final} <span class="muted">(K${x.c.K}/S${x.c.S})</span></span></li>`).join("");
+  document.getElementById("rank").innerHTML=html;
+  document.getElementById("rank2").innerHTML=html;
+  const a=calc("U001").final,b=calc("U002").final,d=calc("U004").final;
+  let notes=`<div class="issue ${Math.abs(a-b)<40?"bad":"ok"}">우수 ${a} vs 다작 ${b} (차이 ${Math.abs(a-b)})</div>`;
+  notes+=`<div class="issue ${ranked[0].u.id==="U004"?"bad":"ok"}">현재 1위: ${ranked[0].u.name} (${ranked[0].c.final}) · 교육계정 점수 ${d}</div>`;
+  notes+=`<div class="issue">프리셋: <strong>${preset}</strong> · ♥누름 단가 ${rates.likeGive} · 첫글 ${rates.first} · 위키 ${rates.wiki}</div>`;
+  document.getElementById("eval-notes").innerHTML=notes;
+}
+function renderAll(){renderRates();renderFeed();renderScore();renderRank();}
+
+function renderOpinions(){ /* opinions live on GitHub Issues */ }
+function buildIssueUrl(){
+  const name=document.getElementById("op-name").value.trim()||"익명";
+  const role=document.getElementById("op-role").value;
+  const text=document.getElementById("op-text").value.trim();
+  const checks=[...document.querySelectorAll('#tab-opinion input[type=checkbox]:checked')].map(x=>x.value);
+  const title=`[의견] ${name} · ${role}`;
+  const body=["## 실회의 AX SNS 크레딧 의견","",`- 이름: ${name}`,`- 관점: ${role}`,`- 일시: ${new Date().toLocaleString("ko-KR")}`,"",
+    "### 체크", checks.length?checks.map(c=>`- [x] ${c}`).join("\n"):"- (없음)","","### 자유 의견", text||"(없음)","","---","_제출 경로: docs/index.html 의견 탭_"].join("\n");
+  const params=new URLSearchParams({title, body, labels:"opinion"});
+  return `https://github.com/hd0126/ndd-ax-sns-credit/issues/new?${params.toString()}`;
+}
+
+document.querySelectorAll("#nav button").forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
+document.getElementById("me").onchange=e=>{me=e.target.value;renderAll()};
+document.getElementById("btn-post").onclick=()=>{
+  const body=document.getElementById("new-body").value.trim(); if(!body){toast("내용 입력");return;}
+  posts.push({id:"P"+(seq++),owner:me,body,wiki:document.getElementById("new-wiki").checked,createdAt:Date.now(),likes:new Set(),comments:[]});
+  document.getElementById("new-body").value=""; document.getElementById("new-wiki").checked=false; toast("게시됨"); renderAll();
+};
+document.getElementById("btn-edu").onclick=()=>{ensureExtra(me).edu++;toast("교육 +1");renderAll()};
+document.getElementById("btn-support").onclick=()=>{ensureExtra(me).support++;toast("타부서 +1");renderAll()};
+document.getElementById("btn-seed").onclick=seed;
+document.getElementById("btn-reset").onclick=()=>{posts=[];extras={};toast("비움");renderAll()};
+document.querySelectorAll("#presets button").forEach(b=>b.onclick=()=>{
+  preset=b.dataset.preset; document.querySelectorAll("#presets button").forEach(x=>x.classList.toggle("active",x===b));
+  if(preset!=="custom") rates={...PRESETS[preset]}; renderAll();
+});
+document.getElementById("btn-op-save").onclick=()=>{
+  window.open(buildIssueUrl(), "_blank", "noopener");
+  toast("이슈 작성 창을 열었습니다");
+};
+
+renderMe(); seed(); showTab("today");
+</script>
+</body>
+</html>
