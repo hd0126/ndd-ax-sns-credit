@@ -414,7 +414,10 @@ function renderScore(){
    <div class="rowline"><span>S 소계</span><span class="pts" style="color:var(--s)">${c.S}</span></div>`;
   document.getElementById("total-pts").textContent = c.final+"점";
 
-  const issues=[{t:"ok",m:`동일인 좋아요 1일 3회 반영 · 오늘 ${c.a.likeGiveToday}/${LIKE_DAY_CAP}회`}];
+  const likeTodayNote=c.a.likeGiveToday>LIKE_DAY_CAP
+    ? `오늘 실제 ${c.a.likeGiveToday}회 → 점수 ${LIKE_DAY_CAP}/${LIKE_DAY_CAP}`
+    : `오늘 ${c.a.likeGiveToday}/${LIKE_DAY_CAP}회`;
+  const issues=[{t:"ok",m:`동일인 좋아요 1일 3회 반영 · ${likeTodayNote}`}];
   if(c.a.likeGiveRaw>c.a.likeGive)
     issues.push({t:"ok",m:`♥누름 ${c.a.likeGiveRaw}회 중 ${c.a.likeGive}회만 K점수`});
   if(c.a.install)

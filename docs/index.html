@@ -512,7 +512,10 @@ function renderScore(){
   const rows=[["글",c.a.post,rates.post,c.parts.post,"k"],["첫글",c.a.first,rates.first,c.parts.first,"k"],["댓글",c.a.comment,rates.comment,c.parts.comment,"k"],["♥받음",c.a.likeRecv,rates.likeRecv,c.parts.likeRecv,"k"],["♥누름",c.a.likeGive,rates.likeGive,c.parts.likeGive,"k"],["위키",c.a.wiki,rates.wiki,c.parts.wiki,"k"],["인용",c.a.cite,rates.cite,c.parts.cite,"k"],["교육",c.a.edu,rates.edu,c.parts.edu,"s"],["설치",c.a.install,0,0,"s"],["실사용+후기",c.a.support,rates.support,c.parts.support,"s"]];
   document.getElementById("score-rows").innerHTML=rows.map(([l,n,u,p,ks])=>`<div class="rowline"><span>${l} (${n}×${u})</span><span class="pts" style="color:${ks==="s"?"var(--s)":"var(--k)"}">${p}</span></div>`).join("")+`<div class="rowline"><span>K</span><span class="pts" style="color:var(--k)">${c.K}</span></div><div class="rowline"><span>S</span><span class="pts" style="color:var(--s)">${c.S}</span></div>`;
   document.getElementById("total-pts").textContent=c.final+"점";
-  const issues=[["ok",`동일인 좋아요 1일 3회 반영 · 오늘 ${c.a.likeGiveToday}/${LIKE_DAY_CAP}회`]];
+  const likeTodayNote=c.a.likeGiveToday>LIKE_DAY_CAP
+    ? `오늘 실제 ${c.a.likeGiveToday}회 → 점수 ${LIKE_DAY_CAP}/${LIKE_DAY_CAP}`
+    : `오늘 ${c.a.likeGiveToday}/${LIKE_DAY_CAP}회`;
+  const issues=[["ok",`동일인 좋아요 1일 3회 반영 · ${likeTodayNote}`]];
   if(c.a.likeGiveRaw>c.a.likeGive) issues.push(["ok",`♥누름 ${c.a.likeGiveRaw}회 중 ${c.a.likeGive}회만 K점수`]);
   if(c.a.install) issues.push(["ok",`설치 ${c.a.install}회 = 0점 (단순 설치 미가점)`]);
   if(c.parts.first&&c.raw&&c.parts.first/c.raw>=0.25) issues.push(["bad",`첫글 보너스 ≈ ${(100*c.parts.first/c.raw).toFixed(0)}%`]);
