@@ -103,10 +103,11 @@
       <h2>빠른 행동 (현재 로그인 계정)</h2>
       <div class="row" style="display:flex;gap:8px;flex-wrap:wrap">
         <button type="button" class="ghost" id="btn-edu">교육·코칭 1회 기록 (S)</button>
-        <button type="button" class="ghost" id="btn-support">타 부서 도입 지원 1회 (S)</button>
+        <button type="button" class="ghost" id="btn-install">설치만 (0)</button>
+        <button type="button" class="ghost" id="btn-support">실사용+후기/댓글 (+5)</button>
         <button type="button" class="ghost" id="btn-cite">내 최근 글에 인용 +1</button>
       </div>
-      <p class="hint">교육/지원은 피드 글이 아니라 S크레딧 활동으로만 쌓입니다.</p>
+      <p class="hint">S: 교육·코칭은 횟수 기록. 단순 설치는 0점. 상대가 업무에 쓰고 후기·댓글을 남기면 +5. 좋아요는 동일인 1일 3회만 점수.</p>
     </section>
 
     <section class="feed" id="feed"></section>
@@ -146,19 +147,20 @@
 
 <footer class="note">
   가상 데이터·로컬 상태만 사용합니다. 새로고침하면 시드 시나리오로 돌아갑니다(초기화 버튼과 동일).
-  근거: SNS 크레딧 시뮬 v1.1 / 배점타당성 검토초안.
+  근거: SNS 크레딧 시뮬 v1.1 + 길형배 반영(좋아요 1일 3회 · 설치 0 · 실사용+후기 5).
 </footer>
 <div class="toast" id="toast"></div>
 
 <script>
+const LIKE_DAY_CAP = 3;
 const PRESETS = {
-  v11: { post:10, first:50, comment:3, likeRecv:1, likeGive:2, wiki:30, cite:10, edu:30, support:50, cap:500 },
-  v1:  { post:10, first:50, comment:3, likeRecv:1, likeGive:1, wiki:30, cite:10, edu:30, support:50, cap:500 },
-  adj: { post:6,  first:25, comment:3, likeRecv:1, likeGive:1, wiki:45, cite:10, edu:30, support:50, cap:500 }
+  v11: { post:10, first:50, comment:3, likeRecv:1, likeGive:2, wiki:30, cite:10, edu:30, support:5, cap:500 },
+  v1:  { post:10, first:50, comment:3, likeRecv:1, likeGive:1, wiki:30, cite:10, edu:30, support:5, cap:500 },
+  adj: { post:6,  first:25, comment:3, likeRecv:1, likeGive:1, wiki:45, cite:10, edu:30, support:5, cap:500 }
 };
 const RATE_LABELS = [
   ["post","글 작성"],["first","첫글 보너스"],["comment","댓글"],["likeRecv","좋아요 받음"],
-  ["likeGive","좋아요 누름"],["wiki","위키"],["cite","인용"],["edu","교육 (S)"],["support","타부서 지원 (S)"],["cap","월 상한"]
+  ["likeGive","좋아요 누름"],["wiki","위키"],["cite","인용"],["edu","교육 (S)"],["support","실사용+후기 (S)"],["cap","월 상한"]
 ];
 
 const USERS = [
@@ -173,14 +175,27 @@ let rates = { ...PRESETS.v11 };
 let preset = "v11";
 let me = "U001";
 let posts = [];
-let extras = {}; // per user: { edu, support, cite }
+let extras = {}; // per user: { edu, support, cite, install }
 let firstClaimed = {}; // userId -> bool after first post created in session tracking via posts
 let seq = 1;
 
 function user(id){ return USERS.find(u=>u.id===id); }
 function ensureExtra(id){
-  if(!extras[id]) extras[id]={ edu:0, support:0, cite:0 };
+  if(!extras[id]) extras[id]={ edu:0, support:0, cite:0, install:0 };
   return extras[id];
+}
+function dayKey(ts){ const d=new Date(ts); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function hasLike(p,uid){ return p.likes.some(l=>l.uid===uid); }
+function likeGiveStats(uid){
+  const byDay={};
+  posts.forEach(p=>p.likes.forEach(l=>{
+    if(l.uid!==uid) return;
+    const k=dayKey(l.at);
+    byDay[k]=(byDay[k]||0)+1;
+  }));
+  let raw=0, counted=0;
+  Object.values(byDay).forEach(n=>{ raw+=n; counted+=Math.min(n,LIKE_DAY_CAP); });
+  return { raw, counted, today: byDay[dayKey(Date.now())]||0 };
 }
 
 function toast(msg){
@@ -194,12 +209,16 @@ function seed(){
   extras = {};
   seq = 1;
   const add = (owner, body, opts={}) => {
+    const createdAt = Date.now() - (posts.length+1)*60000;
+    const seen=new Set();
+    const likes=[];
+    (opts.likers||[]).forEach(uid=>{ if(!seen.has(uid)){ seen.add(uid); likes.push({uid, at:createdAt}); } });
     posts.push({
       id: "P"+(seq++),
       owner, body,
       wiki: !!opts.wiki,
-      createdAt: Date.now() - (posts.length+1)*60000,
-      likes: new Set(opts.likers||[]),
+      createdAt,
+      likes,
       comments: (opts.comments||[]).map((c,i)=>({ id:"C"+seq+i, owner:c.owner, text:c.text }))
     });
   };
@@ -210,16 +229,18 @@ function seed(){
   add("U003","처음 올리는 장비 매뉴얼 초안",{wiki:true, likers:["U001","U002","U004","U005"]});
   add("U004","코칭에 쓴 템플릿 공유",{wiki:true, likers:["U001","U005"], comments:[{owner:"U005",text:"퍼가겠습니다"}]});
   // lurker has no posts; will like/comment interactively — pre-seed some likes/comments from U005
-  posts.forEach((p,i)=>{ if(i%2===0) p.likes.add("U005"); });
+  posts.forEach((p,i)=>{ if(i%2===0 && !hasLike(p,"U005")) p.likes.push({uid:"U005", at:p.createdAt}); });
   posts[0].comments.push({id:"Cseed", owner:"U005", text:"열람 후 댓글 (가상)"});
   posts[1].comments.push({id:"Cseed2", owner:"U005", text:"추가 댓글"});
   ensureExtra("U004").edu = 3;
   ensureExtra("U004").support = 1;
+  ensureExtra("U004").install = 2;
   ensureExtra("U001").cite = 3;
   ensureExtra("U002").cite = 1;
   ensureExtra("U004").cite = 1;
-  // Extra likes given by U004 / U005 already via Set
-  for(let i=0;i<Math.min(12,posts.length);i++) posts[i].likes.add("U004");
+  for(let i=0;i<Math.min(12,posts.length);i++){
+    if(!hasLike(posts[i],"U004")) posts[i].likes.push({uid:"U004", at:posts[i].createdAt});
+  }
   toast("대표 시나리오를 채웠습니다");
   render();
 }
@@ -234,19 +255,14 @@ function activity(uid){
   const postN = mine.length;
   const first = postN>0 ? 1 : 0;
   const wiki = mine.filter(p=>p.wiki).length;
-  const likeRecv = mine.reduce((s,p)=>s+p.likes.size,0);
-  let likeGive = 0, comment = 0;
+  const likeRecv = mine.reduce((s,p)=>s+p.likes.length,0);
+  let comment = 0;
   posts.forEach(p=>{
-    if(p.likes.has(uid) && p.owner!==uid) likeGive++;
-    // count likes on own posts? usually likeGive is pressing on others — exclude self
-    if(p.likes.has(uid) && p.owner===uid) { /* ignore self-like; we won't allow */ }
     p.comments.forEach(c=>{ if(c.owner===uid) comment++; });
   });
-  // Fix: likes on any post by uid
-  likeGive = 0;
-  posts.forEach(p=>{ if(p.likes.has(uid)) likeGive++; });
+  const lg = likeGiveStats(uid);
   const ex = ensureExtra(uid);
-  return { post:postN, first, comment, likeRecv, likeGive, wiki, cite:ex.cite, edu:ex.edu, support:ex.support };
+  return { post:postN, first, comment, likeRecv, likeGive:lg.counted, likeGiveRaw:lg.raw, likeGiveToday:lg.today, wiki, cite:ex.cite, edu:ex.edu, support:ex.support, install:ex.install };
 }
 
 function calc(uid){
@@ -299,7 +315,7 @@ function renderFeed(){
   }
   feed.innerHTML = sorted.map(p=>{
     const u=user(p.owner);
-    const liked=p.likes.has(me);
+    const liked=hasLike(p,me);
     const firstOfUser = posts.filter(x=>x.owner===p.owner).sort((a,b)=>a.createdAt-b.createdAt)[0]?.id===p.id;
     const chips=[];
     if(firstOfUser) chips.push(`<span class="chip first">첫글</span>`);
@@ -319,8 +335,8 @@ function renderFeed(){
       </div>
       <div>${chips.join(" ")}</div>
       <div class="body">${escapeHtml(p.body)}</div>
-      <div class="stats">좋아요 ${p.likes.size} · 댓글 ${p.comments.length}
-        ${p.owner===me?` · 이 글로 받는 ♥점수 ≈ ${p.likes.size*rates.likeRecv}`:""}
+      <div class="stats">좋아요 ${p.likes.length} · 댓글 ${p.comments.length}
+        ${p.owner===me?` · 이 글로 받는 ♥점수 ≈ ${p.likes.length*rates.likeRecv}`:""}
       </div>
       <div class="actions">
         <button type="button" class="${liked?"on":""}" data-act="like">👍 좋아요${liked?" 취소":""}</button>
@@ -341,10 +357,10 @@ function renderFeed(){
     const id=node.dataset.id;
     const p=posts.find(x=>x.id===id);
     node.querySelector('[data-act="like"]').onclick=()=>{
-      if(p.likes.has(me)) p.likes.delete(me); else {
-        if(p.owner===me){ toast("자기 글 좋아요는 끄고 진행합니다"); return; }
-        p.likes.add(me);
-      }
+      if(hasLike(p,me)){ p.likes=p.likes.filter(l=>l.uid!==me); render(); return; }
+      if(p.owner===me){ toast("자기 글 좋아요는 끄고 진행합니다"); return; }
+      if(likeGiveStats(me).today>=LIKE_DAY_CAP){ toast("동일인 좋아요 1일 3회 상한"); return; }
+      p.likes.push({uid:me, at:Date.now()});
       render();
     };
     const cmtInput=node.querySelector("[data-cmt]");
@@ -387,7 +403,8 @@ function renderScore(){
     ["위키",c.a.wiki,rates.wiki,c.parts.wiki,"k"],
     ["인용",c.a.cite,rates.cite,c.parts.cite,"k"],
     ["교육 (S)",c.a.edu,rates.edu,c.parts.edu,"s"],
-    ["타부서 지원 (S)",c.a.support,rates.support,c.parts.support,"s"]
+    ["설치 (S)",c.a.install,0,0,"s"],
+    ["실사용+후기 (S)",c.a.support,rates.support,c.parts.support,"s"]
   ];
   document.getElementById("score-rows").innerHTML = rows.map(([lab,n,unit,pts,ks])=>
     `<div class="rowline"><span>${lab} <span style="color:var(--muted)">(${n}×${unit})</span></span>
@@ -397,7 +414,14 @@ function renderScore(){
    <div class="rowline"><span>S 소계</span><span class="pts" style="color:var(--s)">${c.S}</span></div>`;
   document.getElementById("total-pts").textContent = c.final+"점";
 
-  const issues=[];
+  const likeTodayNote=c.a.likeGiveToday>LIKE_DAY_CAP
+    ? `오늘 실제 ${c.a.likeGiveToday}회 → 점수 ${LIKE_DAY_CAP}/${LIKE_DAY_CAP}`
+    : `오늘 ${c.a.likeGiveToday}/${LIKE_DAY_CAP}회`;
+  const issues=[{t:"ok",m:`동일인 좋아요 1일 3회 반영 · ${likeTodayNote}`}];
+  if(c.a.likeGiveRaw>c.a.likeGive)
+    issues.push({t:"ok",m:`♥누름 ${c.a.likeGiveRaw}회 중 ${c.a.likeGive}회만 K점수`});
+  if(c.a.install)
+    issues.push({t:"ok",m:`설치 ${c.a.install}회 = 0점`});
   if(c.parts.first && c.raw && c.parts.first/c.raw>=0.25)
     issues.push({t:"bad",m:`첫글 보너스가 내 점수의 약 ${(100*c.parts.first/c.raw).toFixed(0)}%`});
   if(c.K && c.parts.likeGive/c.K>=0.2)
@@ -432,14 +456,15 @@ document.getElementById("btn-post").onclick = ()=>{
   const body=document.getElementById("new-body").value.trim();
   if(!body){ toast("내용을 입력하세요"); return; }
   const wiki=document.getElementById("new-wiki").checked;
-  posts.push({ id:"P"+(seq++), owner:me, body, wiki, createdAt:Date.now(), likes:new Set(), comments:[] });
+  posts.push({ id:"P"+(seq++), owner:me, body, wiki, createdAt:Date.now(), likes:[], comments:[] });
   document.getElementById("new-body").value="";
   document.getElementById("new-wiki").checked=false;
   toast(wiki?"게시 + 위키":"게시됨");
   render();
 };
 document.getElementById("btn-edu").onclick = ()=>{ ensureExtra(me).edu++; toast("교육 +1"); render(); };
-document.getElementById("btn-support").onclick = ()=>{ ensureExtra(me).support++; toast("타부서 지원 +1"); render(); };
+document.getElementById("btn-install").onclick = ()=>{ ensureExtra(me).install++; toast("설치만 기록 · 0점"); render(); };
+document.getElementById("btn-support").onclick = ()=>{ ensureExtra(me).support++; toast("실사용+후기/댓글 +"+rates.support); render(); };
 document.getElementById("btn-cite").onclick = ()=>{ ensureExtra(me).cite++; toast("인용 +1"); render(); };
 document.getElementById("btn-reset").onclick = ()=>{ seed(); };
 document.getElementById("btn-seed").onclick = ()=>{ seed(); };
