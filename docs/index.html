@@ -14,7 +14,7 @@ body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Apple SD 
 .nav{display:flex;gap:6px;flex-wrap:wrap;padding:10px 16px;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:58px;z-index:39}
 .nav button{border:1px solid var(--line);background:#f8fafc;border-radius:999px;padding:8px 14px;font-size:13px;cursor:pointer}
 .nav button.active{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:700}
-.wrap{max-width:1180px;margin:0 auto;padding:16px}
+.wrap{max-width:1400px;margin:0 auto;padding:16px}
 .panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:14px}
 .panel h2{margin:0 0 10px;font-size:18px}
 .panel h3{margin:16px 0 8px;font-size:15px}
@@ -82,7 +82,13 @@ button.ghost{background:#f8fafc}
 .op-item{border-bottom:1px solid var(--line);padding:8px 4px;font-size:13px}
 .op-item:last-child{border-bottom:0}
 label.chk{display:block;margin:4px 0;font-size:13px}
-footer{max-width:1180px;margin:8px auto 28px;padding:0 16px;font-size:11px;color:var(--muted)}
+
+.docs-layout{display:grid;grid-template-columns:280px 1fr;gap:14px;align-items:start}
+@media(max-width:900px){.docs-layout{grid-template-columns:1fr}}
+#tab-docs .doc-frame-wrap iframe,#doc-frame{width:100%;height:min(78vh,820px);border:1px solid var(--line);border-radius:10px;background:#f8fafc}
+#tab-docs .panel-list{max-height:min(78vh,820px);overflow:auto}
+
+footer{max-width:1400px;margin:8px auto 28px;padding:0 16px;font-size:11px;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -106,7 +112,9 @@ footer{max-width:1180px;margin:8px auto 28px;padding:0 16px;font-size:11px;color
   <section id="tab-intro" class="tab hidden">
     <div class="panel">
       <h2>AX가속화연구단이란</h2>
-      <p>한국기계연구원(KIMM)이 <strong>2026.7.1.</strong> 운영체로 출범시킨 조직입니다. 연구·행정 전 부문의 <strong>AX(AI Transformation) 가속</strong>이 목적입니다. 특정 연구실만의 과제가 아니라, 기관 구성원이 쓸 수 있는 AI·데이터·협업 기반을 빠르게 깔자는 취지입니다.</p>
+      <p>한국기계연구원(KIMM)이 <strong>2026.7.1.</strong> 운영체로 출범시킨 조직입니다.<br>
+      연구·행정 전 부문의 <strong>AX(AI Transformation) 가속</strong>이 목적입니다.<br>
+      특정 연구실만의 과제가 아니라, 기관 구성원이 쓸 수 있는 AI·데이터·협업 기반을 빠르게 깔자는 취지입니다.</p>
       <p class="muted">근거: 출범·킥오프 메일(길형배), Kick-off 발표(백동천 단장 비전 세션), 혁신팀·내재화팀 자료. 우한창·김형우 메일은 현장 활동(VOC 등) 확인용으로 참고.</p>
     </div>
     <div class="grid2">
@@ -118,7 +126,7 @@ footer{max-width:1180px;margin:8px auto 28px;padding:0 16px;font-size:11px;color
           <tr><td>AX혁신팀</td><td>팀장 <strong>김형우</strong> 박사 — 현장·교육·크레딧 운영, VOC 수요조사 주관</td></tr>
           <tr><td>지식플랫폼팀</td><td><strong>우한창</strong> 선임 등 — SNS·위키·GPU·로그 등 플랫폼 (킥오프 발표 축)</td></tr>
           <tr><td>AX내재화팀</td><td>팀장 <strong>길형배</strong> — 문서체계·성과연결·보상(크레딧) 출구 설계</td></tr>
-          <tr><td>우리 실</td><td>김현돈 — 내재화팀 <strong>겸직</strong>. 오늘 안건은 크레딧·SNS 설계에 대한 실원 의견</td></tr>
+          <tr><td>내재화팀 구성원</td><td>김현돈 외 — 문서·성과연결·보상 설계 참여 (겸직)</td></tr>
         </table>
       </div>
       <div class="panel">
@@ -222,7 +230,7 @@ footer{max-width:1180px;margin:8px auto 28px;padding:0 16px;font-size:11px;color
 
 
   <section id="tab-docs" class="tab hidden">
-    <div class="grid2">
+    <div class="docs-layout">
       <div class="panel">
         <h2>길형배 팀장 공유 자료</h2>
         <p class="muted">메일 첨부 원본입니다. PDF는 오른쪽 미리보기, 엑셀·원본은 다운로드하세요.</p>
@@ -257,7 +265,7 @@ footer{max-width:1180px;margin:8px auto 28px;padding:0 16px;font-size:11px;color
       <div class="panel">
         <h2>미리보기</h2>
         <p class="muted" id="doc-title">왼쪽에서 PDF를 고르세요.</p>
-        <iframe id="doc-frame" title="문서 미리보기" style="width:100%;height:70vh;border:1px solid var(--line);border-radius:10px;background:#f8fafc"></iframe>
+        <iframe id="doc-frame" title="문서 미리보기" style="width:100%;height:min(78vh,820px);border:1px solid var(--line);border-radius:10px;background:#f8fafc"></iframe>
         <p style="margin-top:8px"><a id="doc-open-tab" href="#" target="_blank" rel="noopener">새 탭에서 열기</a></p>
       </div>
     </div>
