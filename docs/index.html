@@ -91,6 +91,7 @@ footer{max-width:1180px;margin:8px auto 28px;padding:0 16px;font-size:11px;color
   <p>2026-09-08 · 테스트·가상 데이터 · GitHub Pages · 의견=Issue · 라이브 정산 아님</p>
 </div>
 <nav class="nav" id="nav">
+  <button type="button" data-tab="intro">0. 연구단 소개</button>
   <button type="button" data-tab="today" class="active">1. 오늘 회의</button>
   <button type="button" data-tab="history">2. 경과</button>
   <button type="button" data-tab="docs">3. 공유 자료</button>
@@ -101,9 +102,54 @@ footer{max-width:1180px;margin:8px auto 28px;padding:0 16px;font-size:11px;color
 
 <div class="wrap">
   <!-- TODAY -->
+  
+  <section id="tab-intro" class="tab hidden">
+    <div class="panel">
+      <h2>AX가속화연구단이란</h2>
+      <p>한국기계연구원(KIMM)이 <strong>2026.7.1.</strong> 운영체로 출범시킨 조직입니다. 연구·행정 전 부문의 <strong>AX(AI Transformation) 가속</strong>이 목적입니다. 특정 연구실만의 과제가 아니라, 기관 구성원이 쓸 수 있는 AI·데이터·협업 기반을 빠르게 깔자는 취지입니다.</p>
+      <p class="muted">근거: 출범·킥오프 메일(길형배), Kick-off 발표(백동천 단장 비전 세션), 혁신팀·내재화팀 자료. 우한창·김형우 메일은 현장 활동(VOC 등) 확인용으로 참고.</p>
+    </div>
+    <div class="grid2">
+      <div class="panel">
+        <h2>조직 (간단)</h2>
+        <table class="simple">
+          <tr><th>역할</th><th>인물 / 비고</th></tr>
+          <tr><td>연구단장</td><td><strong>백동천</strong> 실장 — 비전·총괄, 내부평가는 단장 직접 부여 방향</td></tr>
+          <tr><td>AX혁신팀</td><td>팀장 <strong>김형우</strong> 박사 — 현장·교육·크레딧 운영, VOC 수요조사 주관</td></tr>
+          <tr><td>지식플랫폼팀</td><td><strong>우한창</strong> 선임 등 — SNS·위키·GPU·로그 등 플랫폼 (킥오프 발표 축)</td></tr>
+          <tr><td>AX내재화팀</td><td>팀장 <strong>길형배</strong> — 문서체계·성과연결·보상(크레딧) 출구 설계</td></tr>
+          <tr><td>우리 실</td><td>김현돈 — 내재화팀 <strong>겸직</strong>. 오늘 안건은 크레딧·SNS 설계에 대한 실원 의견</td></tr>
+        </table>
+      </div>
+      <div class="panel">
+        <h2>세 팀이 나누는 일</h2>
+        <ul class="clean">
+          <li><span class="tag">혁신</span> 현장에서 쓰이게 만들기 · 교육 · 크레딧 운영·VOC</li>
+          <li><span class="tag">지식플랫폼</span> SNS·위키·로그 등 <strong>기록·집계가 되는 자리</strong></li>
+          <li><span class="tag">내재화</span> 문서 규격·성과 매핑·보상 규칙이 조직에 남게 하기</li>
+        </ul>
+        <h3>올해 vs 내년</h3>
+        <p>2026 하반기 = <strong>Pilot + 표준</strong>. 실제 평가 연계는 <strong>2027</strong> 쪽 문구. 크레딧 1위 자동 승급은 하지 않기로 정리된 상태입니다.</p>
+        <h3>원장 당부 (킥오프에서 공유된 말)</h3>
+        <ul class="clean">
+          <li>우리 모두의 AI</li>
+          <li>성공 스토리를 빨리</li>
+          <li>완성도보다 속도 (오늘의 동작하는 결과물)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="panel">
+      <h2>오늘 실회의와의 연결</h2>
+      <p>내재화팀이 만든 <strong>KIMM-SNS 크레딧(점수) 초안·시뮬</strong>이 “우리 실에 맞는지” 의견을 모읍니다. 플랫폼이 라이브로 점수를 매기는 단계가 아니라, <strong>가상 데이터로 배점이 타당한지</strong> 보는 단계입니다.</p>
+      <p><button type="button" class="primary" onclick="showTab('today')">오늘 회의 안건으로 →</button>
+         <button type="button" class="ghost" onclick="showTab('docs')">공유 자료 보기 →</button></p>
+    </div>
+  </section>
+
   <section id="tab-today" class="tab">
     <div class="panel">
       <h2>오늘 이 자리에서 할 일</h2>
+      <p class="muted">먼저 <button type="button" class="ghost" onclick="showTab('intro')" style="padding:2px 8px">0. 연구단 소개</button> 를 같이 보고 와도 됩니다.</p>
       <p>AX가속화연구단(내재화팀 겸직)에서 준비 중인 <strong>KIMM-SNS 크레딧(점수) 설계</strong>를 실원께 설명하고, <strong>연구실 관점 의견</strong>을 모읍니다.</p>
       <div class="grid2" style="margin-top:12px">
         <div>
